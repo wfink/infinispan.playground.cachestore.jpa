@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <distribution>repo</distribution>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+        </license>
+    </licenses>
+
+    <groupId>org.infinispan.wfink.playground</groupId>
+    <artifactId>JPACacheStore</artifactId>
+    <version>1.0</version>
+
+    <name>JPA store: application with embedded cache which use a JPA cache store</name>
+
+    <url>http://maven.apache.org</url>
+    <packaging>jar</packaging>
+
+    <properties>
+        <jar.plugin.version>3.0.0</jar.plugin.version>
+    </properties>
+
+    <dependencies>
+<!--    Use dependency to the remote ueber.jar (if the build Manifest Dependencies are removed scope need to be changed here) -->
+        <dependency>
+                <groupId>org.infinispan</groupId>
+                <artifactId>infinispan-core</artifactId>
+                <!-- repeat of version necessary because of double declaration in EAP and JDG ?????? -->
+                <version>9.4.8.Final</version>
+                <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-cachestore-jpa</artifactId>
+            <!-- repeat of version necessary because of double declaration in EAP and JDG ?????? -->
+            <version>9.4.8.Final</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+        	<groupId>org.hibernate</groupId>
+        	<artifactId>hibernate-core</artifactId>
+        	<version>5.3.6.Final</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+        	<groupId>javax.persistence</groupId>
+        	<artifactId>javax.persistence-api</artifactId>
+        	<version>2.2</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${jar.plugin.version}</version>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                    </archive>
+                </configuration>
+            </plugin>
+            <!-- build standalone exe jar -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2.1</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>assembly-jar-Id</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>

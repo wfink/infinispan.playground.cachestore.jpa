@@ -1,0 +1,34 @@
+if [ -z "$1" -o ! -d "$1" ]; then
+  echo "no path to Infinispan libraries given"
+  exit 1
+fi
+
+CLIENTLIB=""
+if [ -n "`ls $1/*infinispan-embedded* 2>/dev/null`" ]; then
+  for jar in `find $1 -name "*infinispan-embedded*.jar"`
+  do
+    CLIENTLIB="$CLIENTLIB:$jar"
+  done
+  for jar in `find $1/lib -name "*.jar"`
+  do
+    CLIENTLIB="$CLIENTLIB:$jar"
+  done
+else
+  for jar in `find $1 -name "*.jar"`
+  do
+    CLIENTLIB="$CLIENTLIB:$jar"
+  done
+fi
+shift
+
+if [ -n "$1" -a -f "$1" ];then
+  CLIENTLIB="$CLIENTLIB:$1"
+  shift
+else
+  echo "no DB driver class given"
+  exit 1
+fi
+
+clazz="org.infinispan.wfink.playground.cachestore.jpa.EmbeddedJPAMain"
+echo $CLIENTLIB
+java -cp target/JPACacheStore-jar-with-dependencies.jar$CLIENTLIB -Djava.util.logging.config.file=/data/devel/github/wfink/infinispan-playground/JPACacheStore/logging.properties $clazz $@
